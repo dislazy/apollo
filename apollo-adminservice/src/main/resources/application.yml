@@ -3,7 +3,15 @@ spring:
     name: apollo-adminservice
   profiles:
     active: ${apollo_profile}
-
+  datasource:
+    hikari:
+      max-lifetime: 30000
+      minimum-idle: 3
+      maximum-pool-size: 10
+      connection-test-query: SELECT 1
+    url: jdbc:mysql://mysql.bosong.online:10039/ApolloConfigDB?characterEncoding=utf8
+    username: apollo
+    password: apollo
 ctrip:
   appid: 100003172
   
@@ -20,11 +28,12 @@ eureka:
     preferIpAddress: true
     status-page-url-path: /info
     health-check-url-path: /health
+    ip-address: 146.56.219.227
   client:
     serviceUrl:
       # This setting will be overridden by eureka.service.url setting from ApolloConfigDB.ServerConfig or System Property
       # see com.ctrip.framework.apollo.biz.eureka.ApolloEurekaClientConfig
-      defaultZone: http://${eureka.instance.hostname}:8080/eureka/
+      defaultZone: http://${eureka.instance.ip-address}:8080/eureka/
     healthcheck:
       enabled: true
     eurekaServiceUrlPollIntervalSeconds: 60
@@ -33,3 +42,11 @@ management:
   health:
     status:
       order: DOWN, OUT_OF_SERVICE, UNKNOWN, UP
+cat:
+  app:
+    id: apollo-admin
+  server:
+    port: 2280
+    servers: 49.233.166.95
+    http:
+      port: 8080

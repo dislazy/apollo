@@ -95,7 +95,7 @@
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 		<!-- for travis usage -->
 		<github.global.server>github</github.global.server>
-		<github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>
+<!--		<github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>-->
 	</properties>
 
 	<modules>
@@ -416,6 +416,11 @@
 					<artifactId>hamcrest-core</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.alidaodao.app</groupId>
+			<artifactId>cat-client</artifactId>
+			<version>3.0.1</version>
 		</dependency>
 	</dependencies>
 

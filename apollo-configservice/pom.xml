@@ -133,7 +133,7 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>1.2.2</version>
 				<configuration>
-					<imageName>apolloconfig/${project.artifactId}</imageName>
+					<imageName>registry.cn-shanghai.aliyuncs.com/bosong/${project.artifactId}</imageName>
 					<imageTags>
 						<imageTag>${project.version}</imageTag>
 						<imageTag>latest</imageTag>
