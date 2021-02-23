@@ -31,11 +31,11 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
     - name: docker push
       run: |
-        mvn clean install -DskipTests=true
+        mvn clean install -Dapollo_profile=github -DskipTests=true
         pwd && ls
-        cd apollo-configservice && mvn clean package docker:build -DskipTests=true
-        cd apollo-adminservice && mvn clean package  docker:build -DskipTests=true
-        cd apollo-portal && mvn clean package -Dapollo_profile=auth docker:build -DskipTests=true
+        cd apollo-configservice && mvn clean package -Dapollo_profile=github docker:build -DskipTests=true
+        cd apollo-adminservice && mvn clean package  -Dapollo_profile=github docker:build -DskipTests=true
+        cd apollo-portal && mvn clean package -Dapollo_profile=github docker:build -DskipTests=true
         docker login --username=${{secrets.USERNAME}}  --password=${{secrets.PASSWORD}}  ${{secrets.REGISTRY}}
         docker push ${{secrets.REGISTRY}}/bosong/apollo-configservice:1.8.1
         docker push ${{secrets.REGISTRY}}/bosong/apollo-configservice:latest
