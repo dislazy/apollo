@@ -5,10 +5,10 @@ name: build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ 1.8.1 ]
     paths-ignore: [ '**/*.md' ]
   pull_request:
-    branches: [ master ]
+    branches: [ 1.8.1 ]
     paths-ignore: [ '**/*.md' ]
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [7, 8, 11]
+        jdk: 8
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK
@@ -29,17 +29,16 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-    - name: Build SDK with JDK 7
-      if: matrix.jdk == '7'
-      run: mvn clean compile -pl apollo-client,apollo-mockserver,apollo-openapi -am -Dmaven.gitcommitid.skip=true
-    - name: JDK 8
-      if: matrix.jdk == '8'
-      run: mvn -B clean package -P travis jacoco:report -Dmaven.gitcommitid.skip=true
-    - name: JDK 11 
-      if: matrix.jdk == '11'
-      run: mvn clean compile -Dmaven.gitcommitid.skip=true
-    - name: Upload coverage to Codecov
-      if: matrix.jdk == '8'
-      uses: codecov/codecov-action@v1
-      with:
-        file: ${{ github.workspace }}/apollo-*/target/site/jacoco/jacoco.xml
+      run: |
+        mvn clean install -DskipTests=true
+        pwd && ls
+        cd apollo-configservice && mvn clean package docker:build -DskipTests=true
+        cd apollo-adminservice && mvn clean package  docker:build -DskipTests=true
+        cd apollo-portal && mvn clean package -Dapollo_profile=auth docker:build -DskipTests=true
+        docker login --username=${{secrets.USERNAME}}  --password=${{secrets.PASSWORD}}  ${{secrets.REGISTRY}}
+        docker push ${{secrets.REGISTRY}}/bosong/apollo-configservice:1.8.1
+        docker push ${{secrets.REGISTRY}}/bosong/apollo-configservice:latest
+        docker push ${{secrets.REGISTRY}}/bosong/apollo-adminservice:1.8.1
+        docker push ${{secrets.REGISTRY}}/bosong/apollo-adminservice:latest
+        docker push ${{secrets.REGISTRY}}/bosong/apollo-portal:1.8.1
+        docker push ${{secrets.REGISTRY}}/bosong/apollo-portal:latest
